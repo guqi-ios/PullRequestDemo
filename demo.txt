@@ -1,0 +1,43 @@
+Demo
+- (NSString *)yfd_stringFromMD5{
+
+    if(self == nil || [self length] == 0)
+        return nil;
+
+    const char *value = [self UTF8String];
+
+    unsigned char outputBuffer[CC_MD5_DIGEST_LENGTH];
+    CC_MD5(value, (CC_LONG)strlen(value), outputBuffer);
+
+    NSMutableString *outputString = [[NSMutableString alloc] initWithCapacity:CC_MD5_DIGEST_LENGTH * 2];
+    for(NSInteger count = 0; count < CC_MD5_DIGEST_LENGTH; count++){
+        [outputString appendFormat:@"%02x",outputBuffer[count]];
+    }
+
+    return outputString;
+}
+
+- (NSString *)yfd_generateId {
+    if(self == nil || [self length] == 0)
+        return nil;
+
+    const char *value = [self UTF8String];
+    unsigned char outputBuffer[CC_MD5_DIGEST_LENGTH];
+    CC_MD5(value, (CC_LONG)strlen(value), outputBuffer);
+    long long digest = 0;
+    for (int i = 0; i < 8; i++) {
+        digest |= ((outputBuffer[i] & 0xffLL) << (8 * (7 - i)));
+    }
+
+    return [NSString stringWithFormat:@"%lld", digest];
+}
+
+#pragma mark - deprecated
+
+- (NSString *)stringFromMD5{
+    return [self yfd_stringFromMD5];
+}
+
+- (NSString *)generateId {
+    return [self yfd_generateId];
+}
