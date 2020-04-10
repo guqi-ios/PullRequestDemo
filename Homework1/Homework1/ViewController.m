@@ -57,6 +57,7 @@
 
 
 #pragma mark - Actions
+
 - (void)buttonTouched
 {
     self.number++;
